@@ -1,13 +1,13 @@
 {
   "name": "Build System",
   "short_name": "Build",
-  "description": "A private habit recovery and self-control system.",
+  "description": "A private, polished habit recovery and self-control system.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0a0d12",
-  "theme_color": "#0a0d12",
+  "background_color": "#070A0F",
+  "theme_color": "#070A0F",
   "icons": [
     {
       "src": "icons/icon-192.png",
