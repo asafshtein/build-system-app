@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <title>Build System</title>
-<meta name="theme-color" content="#070A0F"/>
+<meta name="theme-color" content="#05080D"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -898,6 +898,58 @@ const CSS=`
   @media(max-width:519px){
     .app-frame{height:100dvh !important;}
   }
+
+  /* Product polish v18 */
+  .v18-command{
+    position:relative;
+    overflow:hidden;
+    padding:18px !important;
+    margin-bottom:14px;
+    border-radius:26px !important;
+    background:
+      radial-gradient(circle at 22% 0%, rgba(124,183,255,.20), transparent 38%),
+      radial-gradient(circle at 92% 16%, rgba(246,199,104,.11), transparent 32%),
+      linear-gradient(180deg,rgba(18,27,41,.96),rgba(9,14,22,.99)) !important;
+    border:1px solid rgba(158,179,205,.20) !important;
+    box-shadow:0 28px 80px -54px rgba(124,183,255,.75), inset 0 1px 0 rgba(255,255,255,.06) !important;
+  }
+  .v18-glass{
+    background:rgba(255,255,255,.045) !important;
+    border:1px solid rgba(255,255,255,.085) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .v18-pill{
+    display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+    font-family:${F.mono};font-size:8px;letter-spacing:1.5px;font-weight:900;color:${P.muted};
+  }
+  .v18-action-primary{
+    border-radius:16px !important;
+    padding:13px 14px !important;
+    font-size:12px !important;
+    font-weight:950 !important;
+    letter-spacing:.2px;
+  }
+  .v18-soft-card{
+    background:linear-gradient(180deg,rgba(17,24,36,.78),rgba(10,15,23,.94)) !important;
+    border:1px solid rgba(145,160,180,.14) !important;
+    border-radius:20px !important;
+    box-shadow:0 14px 36px -30px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.035);
+  }
+  .v18-focus-ring{
+    filter:drop-shadow(0 14px 22px rgba(124,183,255,.10));
+  }
+  .v18-rail{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+  }
+  .v18-rail button{
+    min-height:66px;
+    border-radius:18px !important;
+  }
+  @media(max-width:360px){.v18-rail{grid-template-columns:1fr}.v18-rail button{min-height:auto;}}
+
 `;
 
 // ── MILESTONE OVERLAY ─────────────────────────────────────────────────────
@@ -3222,6 +3274,147 @@ function NightReviewModal({xtra,onSave,onClose}){
   );
 }
 
+
+function clampV18(n,min,max){return Math.max(min,Math.min(max,n));}
+function formatSprintV18(seconds){var m=Math.floor(seconds/60),s=seconds%60;return m+":"+(s<10?"0":"")+s;}
+function getMomentumScoreV18(st,cd,xtra){
+  var score=getControlScore(st,cd);
+  var fs=getFrictionState(xtra);
+  var review=getReviewToday(xtra)?8:0;
+  var pledge=xtra&&xtra.pledgedToday?4:0;
+  var recent=(cd.log||[]).filter(function(e){return Date.now()-new Date(e.ts).getTime()<86400000&&e.won;}).length;
+  return clampV18(Math.round(score*.72+fs.pct*.16+review+Math.min(recent*3,12)+pledge),0,100);
+}
+function getNextMilestoneV18(cDays){
+  for(var i=0;i<MILESTONES.length;i++){if(MILESTONES[i].days>cDays)return MILESTONES[i];}
+  return{days:cDays+30,label:"Next Month",msg:"Protect the system for another 30 days.",col:P.gold,icon:"★"};
+}
+function getRiskLabelV18(cd,nd,xtra){
+  var rp=getRiskPlan(cd,nd);
+  var fs=getFrictionState(xtra);
+  var col=rp.level==="high"?P.red:(rp.level==="watch"?P.gold:P.blue);
+  var label=rp.level==="high"?"High risk":(rp.level==="watch"?"Watch window":"Stable");
+  if(fs.done>=3&&rp.level!=="high"){label="Protected";col=P.green;}
+  return{label:label,col:col,rule:rp.rule,msg:rp.msg,level:rp.level,friction:fs.done};
+}
+
+function CommandCenterV18({st,cd,cDays,xtra,nd,onNav,openUrge,onOpenIdentity,onOpenReview,onOpenReplacement,onOpenSOS}){
+  var id=getIdentityInfo(xtra);
+  var score=getMomentumScoreV18(st,cd,xtra);
+  var recovery=getControlScore(st,cd);
+  var grade=getRecoveryGrade(recovery);
+  var risk=getRiskLabelV18(cd,nd,xtra);
+  var next=getNextMilestoneV18(cDays);
+  var left=Math.max(next.days-cDays,0);
+  var repl=getReplacementPlan(xtra);
+  var fs=getFrictionState(xtra);
+  var circ=2*Math.PI*42;
+  return(
+    <div className="v18-command product-card">
+      <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(255,255,255,.055),transparent 42%)",pointerEvents:"none"}}/>
+      <div style={{position:"relative",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:16}}>
+        <div>
+          <div className="section-kicker" style={{color:P.blue,marginBottom:6}}>COMMAND CENTER</div>
+          <div style={{fontSize:25,fontWeight:950,letterSpacing:-.8,lineHeight:1.05}}>Today&apos;s system</div>
+          <div style={{fontSize:12,color:P.muted,marginTop:5,lineHeight:1.45}}>One screen. One plan. No overthinking.</div>
+        </div>
+        <div style={{position:"relative",width:96,height:96,flexShrink:0}}>
+          <svg width="96" height="96" className="v18-focus-ring" style={{transform:"rotate(-90deg)"}}>
+            <circle cx="48" cy="48" r="42" fill="none" stroke="rgba(255,255,255,.07)" strokeWidth="8"/>
+            <circle cx="48" cy="48" r="42" fill="none" stroke={risk.col} strokeWidth="8" strokeDasharray={circ} strokeDashoffset={circ*(1-score/100)} strokeLinecap="round"/>
+          </svg>
+          <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+            <div style={{fontFamily:F.mono,fontSize:24,fontWeight:950,color:P.text,lineHeight:1}}>{score}</div>
+            <div style={{fontFamily:F.mono,fontSize:7,color:risk.col,letterSpacing:1.6,marginTop:3}}>CONTROL</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{position:"relative",display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:14}}>
+        <div className="v18-glass" style={{borderRadius:16,padding:"11px 9px"}}><div style={{fontFamily:F.mono,fontSize:8,color:P.muted,letterSpacing:1.6,marginBottom:4}}>CLEAN</div><div style={{fontSize:22,fontWeight:950,color:P.text,lineHeight:1}}>{cDays}d</div><div style={{fontSize:9,color:P.muted,marginTop:4}}>current</div></div>
+        <div className="v18-glass" style={{borderRadius:16,padding:"11px 9px"}}><div style={{fontFamily:F.mono,fontSize:8,color:P.muted,letterSpacing:1.6,marginBottom:4}}>RECOVERY</div><div style={{fontSize:22,fontWeight:950,color:grade.col,lineHeight:1}}>{recovery}</div><div style={{fontSize:9,color:P.muted,marginTop:4}}>{grade.label}</div></div>
+        <div className="v18-glass" style={{borderRadius:16,padding:"11px 9px"}}><div style={{fontFamily:F.mono,fontSize:8,color:P.muted,letterSpacing:1.6,marginBottom:4}}>RISK</div><div style={{fontSize:14,fontWeight:950,color:risk.col,lineHeight:1.1}}>{risk.label}</div><div style={{fontSize:9,color:P.muted,marginTop:6}}>{fs.done}/5 shield</div></div>
+      </div>
+
+      <div className="v18-glass" style={{position:"relative",borderRadius:18,padding:13,marginBottom:12}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:8}}>
+          <div><div style={{fontFamily:F.mono,fontSize:8,color:id.col,letterSpacing:2,marginBottom:4}}>IDENTITY</div><div style={{fontSize:15,fontWeight:950,color:P.text}}>{id.custom||id.label}</div></div>
+          <button className="tap" onClick={onOpenIdentity} style={{background:id.col+"18",border:"1px solid "+id.col+"45",color:id.col,borderRadius:10,padding:"8px 10px",fontFamily:F.mono,fontSize:8,fontWeight:900,cursor:"pointer"}}>EDIT</button>
+        </div>
+        <div style={{fontSize:11,color:P.muted,lineHeight:1.45}}>{id.rule}</div>
+      </div>
+
+      <div style={{position:"relative",display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
+        <button className="tap v18-action-primary" onClick={openUrge} style={{background:P.red,color:"#fff",border:"none",cursor:"pointer"}}>PANIC MODE</button>
+        <button className="tap v18-action-primary" onClick={onOpenReview} style={{background:P.blue,color:"#07101A",border:"none",cursor:"pointer"}}>NIGHT REVIEW</button>
+      </div>
+
+      <div style={{position:"relative",display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+        <button className="tap" onClick={onOpenReplacement} style={{background:"rgba(255,255,255,.045)",border:"1px solid rgba(255,255,255,.09)",borderRadius:15,padding:"11px 10px",textAlign:"left",cursor:"pointer"}}>
+          <div style={{fontFamily:F.mono,fontSize:7,color:P.green,letterSpacing:1.6,marginBottom:4}}>DEFAULT RESET</div><div style={{fontSize:12,fontWeight:900,color:P.text,lineHeight:1.25}}>{repl.label}</div>
+        </button>
+        <button className="tap" onClick={onOpenSOS} style={{background:"rgba(255,255,255,.045)",border:"1px solid rgba(255,255,255,.09)",borderRadius:15,padding:"11px 10px",textAlign:"left",cursor:"pointer"}}>
+          <div style={{fontFamily:F.mono,fontSize:7,color:P.gold,letterSpacing:1.6,marginBottom:4}}>NEXT TARGET</div><div style={{fontSize:12,fontWeight:900,color:P.text,lineHeight:1.25}}>{left}d to {next.label}</div>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function FocusSprintV18({openUrge,onNav}){
+  var[seconds,setSeconds]=useState(0);
+  var[done,setDone]=useState(false);
+  useEffect(function(){
+    if(seconds<=0)return;
+    var t=setInterval(function(){setSeconds(function(s){return Math.max(0,s-1);});},1000);
+    return function(){clearInterval(t);};
+  },[seconds]);
+  useEffect(function(){if(seconds===0&&done===false)return;},[seconds,done]);
+  var active=seconds>0;
+  var pct=active?100-(seconds/(25*60))*100:(done?100:0);
+  return(
+    <div className="v18-soft-card" style={{padding:14,marginBottom:14}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:10}}>
+        <div>
+          <div className="section-kicker" style={{marginBottom:5}}>FOCUS SPRINT</div>
+          <div style={{fontSize:16,fontWeight:950,color:P.text}}>Turn energy into output</div>
+        </div>
+        <div style={{fontFamily:F.mono,fontSize:20,fontWeight:950,color:active?P.blue:P.muted}}>{active?formatSprintV18(seconds):"25:00"}</div>
+      </div>
+      <div style={{height:6,background:P.dim,borderRadius:99,overflow:"hidden",marginBottom:11}}><div style={{height:"100%",width:pct+"%",background:P.blue,borderRadius:99,transition:"width .3s"}}/></div>
+      <div className="v18-rail">
+        <button className="tap" onClick={function(){setSeconds(25*60);setDone(false);}} style={{background:P.blue+"16",border:"1px solid "+P.blue+"35",color:P.blue,cursor:"pointer"}}><div style={{fontFamily:F.mono,fontSize:9,fontWeight:900,letterSpacing:1}}>START</div><div style={{fontSize:11,color:P.muted,marginTop:4}}>25 min work</div></button>
+        <button className="tap" onClick={function(){setSeconds(5*60);setDone(false);}} style={{background:P.green+"12",border:"1px solid "+P.green+"30",color:P.green,cursor:"pointer"}}><div style={{fontFamily:F.mono,fontSize:9,fontWeight:900,letterSpacing:1}}>RESET</div><div style={{fontSize:11,color:P.muted,marginTop:4}}>5 min move</div></button>
+        <button className="tap" onClick={openUrge} style={{background:P.red+"10",border:"1px solid "+P.red+"30",color:P.red,cursor:"pointer"}}><div style={{fontFamily:F.mono,fontSize:9,fontWeight:900,letterSpacing:1}}>SOS</div><div style={{fontSize:11,color:P.muted,marginTop:4}}>urge help</div></button>
+      </div>
+    </div>
+  );
+}
+
+function WeeklyPulseV18({st,cd,xtra,onNav}){
+  var since=Date.now()-7*86400000;
+  var logs=(cd.log||[]).filter(function(e){return new Date(e.ts).getTime()>=since;});
+  var wins=logs.filter(function(e){return e.won;}).length;
+  var losses=logs.length-wins;
+  var reviews=xtra&&xtra.review&&new Date(xtra.review.ts||0).getTime()>=since?1:0;
+  var winRate=logs.length?Math.round(wins/logs.length*100):100;
+  var col=losses?P.gold:P.green;
+  return(
+    <button className="tap v18-soft-card" onClick={function(){onNav("progress");}} style={{width:"100%",padding:14,marginBottom:14,textAlign:"left",cursor:"pointer"}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:10}}>
+        <div><div className="section-kicker" style={{marginBottom:5}}>WEEKLY PULSE</div><div style={{fontSize:16,fontWeight:950,color:P.text}}>Your last 7 days</div></div>
+        <div style={{fontFamily:F.mono,fontSize:18,fontWeight:950,color:col}}>{winRate}%</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
+        <div className="v18-glass" style={{borderRadius:13,padding:"10px 8px"}}><div style={{fontFamily:F.mono,fontSize:8,color:P.green,letterSpacing:1.3}}>WINS</div><div style={{fontSize:18,fontWeight:950,marginTop:3}}>{wins}</div></div>
+        <div className="v18-glass" style={{borderRadius:13,padding:"10px 8px"}}><div style={{fontFamily:F.mono,fontSize:8,color:P.red,letterSpacing:1.3}}>SLIPS</div><div style={{fontSize:18,fontWeight:950,marginTop:3}}>{losses}</div></div>
+        <div className="v18-glass" style={{borderRadius:13,padding:"10px 8px"}}><div style={{fontFamily:F.mono,fontSize:8,color:P.blue,letterSpacing:1.3}}>REVIEWS</div><div style={{fontSize:18,fontWeight:950,marginTop:3}}>{reviews}</div></div>
+      </div>
+      <div style={{fontSize:10,color:P.muted,lineHeight:1.45,marginTop:10}}>Tap to open full progress. This is data, not judgment.</div>
+    </button>
+  );
+}
+
 function HomeView({st,cd,tasks,sides,ev,phase,sm,calcXP,completeTask,cDone,allCore,days7,hist,cDays,cTitle,bounce,startClean,openUrge,openQuickUrge,openDistract,todayW,claimMicro,wk,mot,nd,onMood,onAlmost,lowControl,onDismissLowControl,comebackMsg,onDismissComeback,easyMode,onToggleEasy,onNav,pld,onPledge,onOpenChat,jrnl,hb,xtra,onCompleteLesson,onOpenFutureSelf,onOpenIdentity,onOpenReview,onToggleFriction,onOpenReplacement,onCompleteRealMission,onOpenSOS,installPrompt,onInstallApp}){
   var smartMsg=getSmartMsg(st,cd);
   var dailyPlan=getDailyPlan();
@@ -3249,9 +3442,9 @@ function HomeView({st,cd,tasks,sides,ev,phase,sm,calcXP,completeTask,cDone,allCo
       <HomeHero st={st} cd={cd} cDays={cDays} cTitle={cTitle} hist={hist} todayW={todayW} allCore={allCore} cDone={cDone} onStartClean={startClean}/>
 
       <div style={{padding:"14px 14px 0"}}>
+        <CommandCenterV18 st={st} cd={cd} cDays={cDays} xtra={xtra} nd={nd} onNav={onNav} openUrge={openUrge} onOpenIdentity={onOpenIdentity} onOpenReview={onOpenReview} onOpenReplacement={onOpenReplacement} onOpenSOS={onOpenSOS}/>
+        <FocusSprintV18 openUrge={openUrge} onNav={onNav}/>
         <PersonalCard mot={mot} st={st} cd={cd}/>
-        <IdentityCard xtra={xtra} onOpen={onOpenIdentity}/>
-        <RecoveryScoreMini st={st} cd={cd}/>
         <SetupStarterCard xtra={xtra} onOpen={function(){onNav("setup");}}/>
         <PWAInstallCard installPrompt={installPrompt} onInstall={onInstallApp}/>
 
@@ -3271,6 +3464,7 @@ function HomeView({st,cd,tasks,sides,ev,phase,sm,calcXP,completeTask,cDone,allCo
         <DailyLessonCard lesson={lesson} xtra={xtra} onComplete={onCompleteLesson}/>
         <RiskPlanCard risk={risk} openUrge={openUrge}/>
         <CravingHeatmapMini log={cd.log}/>
+        <WeeklyPulseV18 st={st} cd={cd} xtra={xtra} onNav={onNav}/>
         <NightReviewCard xtra={xtra} onOpen={onOpenReview}/>
         <FrictionSetupCard xtra={xtra} onToggle={onToggleFriction}/>
         <ReplacementSystemCard xtra={xtra} onOpen={onOpenReplacement} openUrge={openUrge}/>
