@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Build System",
   "short_name": "Build",
-  "description": "A private recovery app focused on discipline, better habits, and staying in control.",
+  "description": "A faster private recovery app for urges, habits, reminders, and daily self-control.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

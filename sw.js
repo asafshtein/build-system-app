@@ -1,4 +1,4 @@
-const CACHE_NAME = "build-system-v19";
+const CACHE_NAME = "build-system-v20";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./sw.js", "./icons/icon-192.png", "./icons/icon-512.png"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -13,4 +13,15 @@ self.addEventListener("fetch", event => {
     caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)).catch(() => {});
     return response;
   }).catch(() => caches.match("./index.html"))));
+});
+
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+  event.waitUntil((async () => {
+    const allClients = await clients.matchAll({type: "window", includeUncontrolled: true});
+    for (const client of allClients) {
+      if ("focus" in client) return client.focus();
+    }
+    if (clients.openWindow) return clients.openWindow("./");
+  })());
 });

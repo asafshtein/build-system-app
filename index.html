@@ -12,9 +12,6 @@
 <link rel="manifest" href="manifest.webmanifest"/>
 <link rel="icon" href="icons/icon-192.png"/>
 <link rel="apple-touch-icon" href="icons/icon-192.png"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -73,7 +70,7 @@ window.storage={
 };
 
 const SK="bsys7_s",TK="bsys7_t",HK="bsys7_h",CK="bsys7_c",MK="bsys7_m",AK="bsys7_a",NK="bsys7_n",XK="bsys7_x",JK="bsys7_j",PK="bsys7_p",ACCK="bsys7_acc",HBK="bsys7_hb",GK="bsys7_g";
-const F={display:"'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",mono:"'JetBrains Mono','SFMono-Regular','Courier New',monospace"};
+const F={display:"system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif",mono:"'SFMono-Regular','Consolas','Liberation Mono','Courier New',monospace"};
 const P={bg:"#060A10",surface:"#0D131D",card:"#111A26",cardHi:"#182433",border:"#27364B",borderHi:"#46627D",gold:"#FFD166",purple:"#B199FF",green:"#66E8BD",blue:"#9AD3FF",red:"#FF798A",text:"#F7FAFE",muted:"#A5B2C3",dim:"#1F2B3B"};
 const SHADOW={
   card:"0 1px 2px rgba(0,0,0,0.4), 0 8px 24px -8px rgba(0,0,0,0.5)",
@@ -3444,36 +3441,26 @@ function HomeView({st,cd,tasks,sides,ev,phase,sm,calcXP,completeTask,cDone,allCo
 
       <div style={{padding:"14px 14px 0"}}>
         <CommandCenterV18 st={st} cd={cd} cDays={cDays} xtra={xtra} nd={nd} onNav={onNav} openUrge={openUrge} onOpenIdentity={onOpenIdentity} onOpenReview={onOpenReview} onOpenReplacement={onOpenReplacement} onOpenSOS={onOpenSOS}/>
-        <FocusSprintV18 openUrge={openUrge} onNav={onNav}/>
-        <PersonalCard mot={mot} st={st} cd={cd}/>
         <SetupStarterCard xtra={xtra} onOpen={function(){onNav("setup");}}/>
         <PWAInstallCard installPrompt={installPrompt} onInstall={onInstallApp}/>
+        <NotificationStatusCard xtra={xtra} onOpen={function(){onNav("reminders");}}/>
 
         <button className="tap" onClick={openUrge} aria-label="Panic mode"
           style={{width:"100%",background:"linear-gradient(145deg,rgba(82,22,35,.96),rgba(28,10,17,.98))",border:"1px solid "+P.red+"55",borderRadius:28,padding:"22px 18px",cursor:"pointer",display:"flex",alignItems:"center",gap:15,marginBottom:14,position:"relative",overflow:"hidden",boxShadow:"0 24px 70px -42px rgba(255,101,119,.95), inset 0 1px 0 rgba(255,255,255,.09)"}}>
           <div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 20% 50%,"+P.red+"25,transparent 55%)",pointerEvents:"none"}}/>
           <div style={{width:54,height:54,borderRadius:18,background:"rgba(255,255,255,.07)",border:"1px solid "+P.red+"55",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:22}}>SOS</div>
           <div style={{flex:1,textAlign:"left",position:"relative"}}>
-            <div style={{fontSize:23,fontWeight:950,color:"#fff",lineHeight:1.05,letterSpacing:-.5}}>Panic Mode</div>
-            <div style={{fontSize:12,color:P.red+"cc",marginTop:4}}>Urge hitting? Start the rescue flow.</div>
+            <div style={{fontSize:23,fontWeight:950,color:"#fff",lineHeight:1.05,letterSpacing:-.5}}>Emergency Mode</div>
+            <div style={{fontSize:12,color:P.red+"cc",marginTop:4}}>Strong urge? Tap this first.</div>
           </div>
           <div style={{fontFamily:F.mono,fontSize:20,color:P.red+"aa",position:"relative"}}>▶</div>
         </button>
 
-        <FutureSelfCard xtra={xtra} onOpen={onOpenFutureSelf} openUrge={openUrge}/>
         <MainMissionCard mission={mission} onNav={onNav} onPledge={onPledge} openUrge={openUrge}/>
         <DailyLessonCard lesson={lesson} xtra={xtra} onComplete={onCompleteLesson}/>
         <RiskPlanCard risk={risk} openUrge={openUrge}/>
-        <CravingHeatmapMini log={cd.log}/>
-        <WeeklyPulseV18 st={st} cd={cd} xtra={xtra} onNav={onNav}/>
-        <NightReviewCard xtra={xtra} onOpen={onOpenReview}/>
-        <FrictionSetupCard xtra={xtra} onToggle={onToggleFriction}/>
-        <ReplacementSystemCard xtra={xtra} onOpen={onOpenReplacement} openUrge={openUrge}/>
-        <CoachInsightCard cd={cd} nd={nd} xtra={xtra} onOpenChat={onOpenChat}/>
-        <RealWorldMissionPackCard xtra={xtra} cd={cd} onComplete={onCompleteRealMission}/>
-        <SOSCard xtra={xtra} cd={cd} onOpen={onOpenSOS}/>
 
-        <Lbl text="TODAY'S REPLACEMENT PLAN" right="3 actions"/>
+        <Lbl text="NEXT 3 ACTIONS" right="simple"/>
         <div style={{background:P.card,border:"1px solid "+P.border,borderRadius:12,padding:"4px 0",marginBottom:12,overflow:"hidden"}}>
           {dailyPlan.map(function(p,i){
             return(
@@ -3490,8 +3477,8 @@ function HomeView({st,cd,tasks,sides,ev,phase,sm,calcXP,completeTask,cDone,allCo
         <button className="tap" onClick={function(){setShowMore(function(v){return !v;});}}
           style={{width:"100%",background:P.surface,border:"1px solid "+P.border,borderRadius:11,padding:"12px 14px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:showMore?8:16}}>
           <div style={{textAlign:"left"}}>
-            <div style={{fontSize:13,fontWeight:800,color:P.text}}>More tools</div>
-            <div style={{fontFamily:F.mono,fontSize:8,color:P.muted,marginTop:2}}>quests, mood, route, stats</div>
+            <div style={{fontSize:13,fontWeight:850,color:P.text}}>Advanced systems</div>
+            <div style={{fontFamily:F.mono,fontSize:8,color:P.muted,marginTop:2}}>only open this when needed</div>
           </div>
           <span style={{fontSize:16,color:P.muted,transform:showMore?"rotate(90deg)":"none",display:"inline-block",transition:"transform .2s"}}>▶</span>
         </button>
@@ -3499,6 +3486,17 @@ function HomeView({st,cd,tasks,sides,ev,phase,sm,calcXP,completeTask,cDone,allCo
         {showMore&&(
           <div style={{marginBottom:16}}>
             <DailyPledge pld={pld} onPledge={onPledge}/>
+            <FocusSprintV18 openUrge={openUrge} onNav={onNav}/>
+            <FutureSelfCard xtra={xtra} onOpen={onOpenFutureSelf} openUrge={openUrge}/>
+            <NightReviewCard xtra={xtra} onOpen={onOpenReview}/>
+            <FrictionSetupCard xtra={xtra} onToggle={onToggleFriction}/>
+            <ReplacementSystemCard xtra={xtra} onOpen={onOpenReplacement} openUrge={openUrge}/>
+            <CoachInsightCard cd={cd} nd={nd} xtra={xtra} onOpenChat={onOpenChat}/>
+            <RealWorldMissionPackCard xtra={xtra} cd={cd} onComplete={onCompleteRealMission}/>
+            <SOSCard xtra={xtra} cd={cd} onOpen={onOpenSOS}/>
+            <CravingHeatmapMini log={cd.log}/>
+            <WeeklyPulseV18 st={st} cd={cd} xtra={xtra} onNav={onNav}/>
+            <PersonalCard mot={mot} st={st} cd={cd}/>
             {hb&&hb.habits&&hb.habits.length>1&&(
               <div style={{display:"flex",gap:6,marginBottom:10,overflowX:"auto",paddingBottom:2}}>
                 {hb.habits.filter(function(h){return h.id!=="main";}).map(function(h){return <div key={h.id} style={{flexShrink:0,background:P.card,border:"1px solid "+P.border,borderRadius:8,padding:"6px 12px",display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:13}}>{h.icon}</span><span style={{fontSize:11,color:P.muted}}>{h.label}</span></div>;})}
@@ -4463,6 +4461,73 @@ function SetupStarterCard({xtra,onOpen}){
   );
 }
 
+
+function OnboardPlan({xtra,mot,onFinish}){
+  var base=getSetupData(xtra);
+  var[habit,setHabit]=useState(base.habit||"Porn");
+  var[danger,setDanger]=useState(base.dangerTime||"night");
+  var[why,setWhy]=useState(base.why||(mot&&mot.why)||"");
+  var[replacement,setReplacement]=useState(base.replacement||"walk");
+  var[reminder,setReminder]=useState(base.reminderTime||"21:30");
+  var[notify,setNotify]=useState(true);
+  var[status,setStatus]=useState("");
+  var allow=function(){
+    if(!canUsePhoneNotifications()){setStatus("This browser does not support notifications.");setNotify(false);return;}
+    Notification.requestPermission().then(function(p){setStatus(p==="granted"?"Notifications allowed.":"Permission: "+p);setNotify(p==="granted");});
+  };
+  var done=function(){
+    onFinish({habit:habit,dangerTime:danger,why:why,replacement:replacement,strictMode:false,reminderTime:reminder,notifications:notify});
+  };
+  return(
+    <div className="app-frame" style={{background:P.bg,minHeight:"100vh",maxWidth:430,width:"100%",margin:"0 auto",color:P.text,fontFamily:F.display,display:"flex",flexDirection:"column",overflow:"hidden"}}>
+      <style>{CSS}</style>
+      <div className="app-scroll-area" style={{padding:"24px 18px 110px",overflowY:"auto"}}>
+        <div style={{marginBottom:22}}>
+          <div className="section-kicker" style={{color:P.gold,marginBottom:10}}>FINAL SETUP</div>
+          <div style={{fontSize:30,fontWeight:950,letterSpacing:-1,lineHeight:1.05,marginBottom:8}}>Build your first rescue plan</div>
+          <div style={{fontSize:13,color:P.muted,lineHeight:1.6}}>This keeps the app simple. One habit, one danger time, one replacement, one reminder.</div>
+        </div>
+
+        <div className="product-card" style={{padding:15,marginBottom:12}}>
+          <label className="section-kicker">Habit you are quitting</label>
+          <input className="clean-input" value={habit} onChange={function(e){setHabit(e.target.value);}} style={{marginTop:8,marginBottom:14}}/>
+
+          <label className="section-kicker">Why this matters</label>
+          <textarea className="clean-input" value={why} onChange={function(e){setWhy(e.target.value);}} placeholder="Example: I want more focus, confidence, and control." rows={3} style={{marginTop:8,marginBottom:14,resize:"vertical",lineHeight:1.5}}/>
+
+          <label className="section-kicker">Danger time</label>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:7,marginTop:8,marginBottom:14}}>
+            {["morning","afternoon","evening","night"].map(function(t){var active=danger===t;return <button key={t} className="tap" onClick={function(){setDanger(t);}} style={{background:active?P.gold+"18":P.surface,border:"1px solid "+(active?P.gold+"45":P.border),color:active?P.gold:P.muted,borderRadius:12,padding:"11px 4px",fontFamily:F.mono,fontSize:8,fontWeight:900,cursor:"pointer"}}>{t.toUpperCase()}</button>;})}
+          </div>
+
+          <label className="section-kicker">Default rescue action</label>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:7,marginTop:8}}>
+            {REPLACEMENT_OPTIONS.slice(0,6).map(function(a){var active=replacement===a.id;return <button key={a.id} className="tap" onClick={function(){setReplacement(a.id);}} style={{background:active?SM[a.stat].col+"14":P.surface,border:"1px solid "+(active?SM[a.stat].col+"45":P.border),borderRadius:13,padding:"10px 6px",cursor:"pointer",minHeight:66}}><div style={{fontSize:18,marginBottom:5}}>{a.icon}</div><div style={{fontSize:10,color:active?SM[a.stat].col:P.muted,fontWeight:850}}>{a.label}</div></button>;})}
+          </div>
+        </div>
+
+        <div className="product-card" style={{padding:15,marginBottom:14,borderColor:P.blue+"30"}}>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:12}}>
+            <div>
+              <div style={{fontSize:15,fontWeight:950}}>Important phone reminder</div>
+              <div style={{fontSize:11,color:P.muted,marginTop:3}}>Set your danger-time warning.</div>
+            </div>
+            <button className="tap" onClick={function(){setNotify(!notify);}} style={{background:notify?P.green+"14":P.surface,border:"1px solid "+(notify?P.green+"45":P.border),color:notify?P.green:P.muted,borderRadius:13,padding:"9px 12px",fontFamily:F.mono,fontSize:9,fontWeight:950,cursor:"pointer"}}>{notify?"ON":"OFF"}</button>
+          </div>
+          <input className="clean-input" value={reminder} onChange={function(e){setReminder(e.target.value);}}/>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:10}}>
+            <button className="tap calm-button" onClick={allow} style={{background:P.blue+"12",border:"1px solid "+P.blue+"35",color:P.blue}}>Allow notifications</button>
+            <button className="tap calm-button" onClick={function(){sendPhoneNotification("Build System","Test reminder working.","onboarding-test");}} style={{background:P.green+"12",border:"1px solid "+P.green+"35",color:P.green}}>Test</button>
+          </div>
+          {status&&<div style={{fontSize:11,color:P.muted,marginTop:9,lineHeight:1.45}}>{status}</div>}
+        </div>
+
+        <button className="tap" onClick={done} style={{width:"100%",background:P.gold,border:"1px solid "+P.gold,color:"#111827",borderRadius:18,padding:"16px",fontSize:15,fontWeight:950,cursor:"pointer"}}>Start using the app</button>
+      </div>
+    </div>
+  );
+}
+
 function SetupView({xtra,mot,onSave}){
   var base=getSetupData(xtra);
   var[habit,setHabit]=useState(base.habit||"Porn");
@@ -4592,6 +4657,68 @@ function SettingsView({xtra,onSave,onNav}){
   );
 }
 
+
+function canUsePhoneNotifications(){
+  return typeof window!=="undefined" && "Notification" in window;
+}
+function getNotificationPermission(){
+  if(!canUsePhoneNotifications())return "unsupported";
+  return Notification.permission;
+}
+function sendPhoneNotification(title,body,tag){
+  if(!canUsePhoneNotifications() || Notification.permission!=="granted")return Promise.resolve(false);
+  var opts={body:body||"",icon:"icons/icon-192.png",badge:"icons/icon-192.png",tag:tag||"build-system",renotify:true,silent:false};
+  if(navigator.serviceWorker&&navigator.serviceWorker.ready){
+    return navigator.serviceWorker.ready.then(function(reg){return reg.showNotification(title,opts).then(function(){return true;});}).catch(function(){
+      try{new Notification(title,opts);return true;}catch(e){return false;}
+    });
+  }
+  try{new Notification(title,opts);return Promise.resolve(true);}catch(e){return Promise.resolve(false);}
+}
+function getNextReminderSummary(xtra){
+  var r=getReminderData(xtra);
+  if(!r.enabled)return "Off";
+  return "Pledge "+(r.morning||"07:30")+" · Danger "+(r.danger||"21:30")+" · Review "+(r.night||"22:30");
+}
+function sameMinuteNow(hhmm){
+  if(!hhmm||hhmm.indexOf(":")<0)return false;
+  var d=new Date();
+  var h=("0"+d.getHours()).slice(-2),m=("0"+d.getMinutes()).slice(-2);
+  return (h+":"+m)===hhmm;
+}
+function markNotificationSent(kind){
+  try{localStorage.setItem("bsys7_notify_"+kind,todayStr()+"|"+new Date().getHours()+":"+new Date().getMinutes());}catch(e){}
+}
+function wasNotificationSent(kind){
+  try{return (localStorage.getItem("bsys7_notify_"+kind)||"").indexOf(todayStr()+"|")===0;}catch(e){return false;}
+}
+function NotificationStatusCard({xtra,onOpen}){
+  var r=getReminderData(xtra);
+  var perm=getNotificationPermission();
+  var good=r.enabled&&perm==="granted";
+  var warn=r.enabled&&perm!=="granted";
+  var title=good?"Phone reminders active":warn?"Finish notification setup":"Turn on phone reminders";
+  var sub=good?getNextReminderSummary(xtra):warn?"Permission is not granted yet. Tap to fix it.":"Morning pledge, danger-time warning, and night review.";
+  var col=good?P.green:(warn?P.gold:P.blue);
+  var test=function(e){
+    e.stopPropagation();
+    if(perm==="granted")sendPhoneNotification("Build System","Test reminder working. Stay in control.","test");
+    else onOpen();
+  };
+  return(
+    <div className="tap v18-soft-card" role="button" tabIndex="0" onClick={onOpen} style={{width:"100%",padding:14,marginBottom:14,textAlign:"left",cursor:"pointer",borderColor:col+"35",background:"linear-gradient(180deg,"+col+"10,rgba(255,255,255,.025))"}}>
+      <div style={{display:"flex",alignItems:"center",gap:12}}>
+        <div style={{width:42,height:42,borderRadius:16,background:col+"16",border:"1px solid "+col+"40",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>◔</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:15,fontWeight:950,color:P.text,marginBottom:3}}>{title}</div>
+          <div style={{fontSize:11.5,color:P.muted,lineHeight:1.45}}>{sub}</div>
+        </div>
+        <button className="tap" onClick={test} style={{background:col+"12",border:"1px solid "+col+"40",color:col,borderRadius:12,padding:"8px 10px",fontFamily:F.mono,fontSize:8,fontWeight:900,cursor:"pointer"}}>{good?"TEST":"SETUP"}</button>
+      </div>
+    </div>
+  );
+}
+
 function RemindersView({xtra,onSave}){
   var base=getReminderData(xtra);
   var[morning,setMorning]=useState(base.morning||"07:30");
@@ -4599,24 +4726,52 @@ function RemindersView({xtra,onSave}){
   var[night,setNight]=useState(base.night||"22:30");
   var[enabled,setEnabled]=useState(!!base.enabled);
   var[status,setStatus]=useState("");
+  var perm=getNotificationPermission();
   var askPermission=function(){
-    if(!('Notification' in window)){setStatus("Notifications are not supported here.");return;}
-    Notification.requestPermission().then(function(p){setStatus("Permission: "+p);});
+    if(!canUsePhoneNotifications()){setStatus("This browser does not support phone notifications.");return;}
+    Notification.requestPermission().then(function(p){
+      setStatus(p==="granted"?"Permission granted. Send a test now.":"Permission: "+p);
+      if(p==="granted")sendPhoneNotification("Build System","Notifications are working. You will see reminders while the app is active or installed.","permission-test");
+    });
+  };
+  var save=function(){
+    onSave({morning:morning,danger:danger,night:night,enabled:enabled,permission:getNotificationPermission(),updated:new Date().toISOString()});
+    setStatus("Saved. Keep the app installed for the best chance of phone reminders.");
+  };
+  var test=function(){
+    if(getNotificationPermission()!=="granted"){setStatus("Allow notification permission first.");return;}
+    sendPhoneNotification("Build System","Test reminder. This is how danger-time alerts will look.","manual-test").then(function(ok){setStatus(ok?"Test notification sent.":"Could not send notification.");});
   };
   return(
     <div className="fadeIn" style={{padding:"16px 14px 24px"}}>
-      <div style={{marginBottom:18}}><div className="section-kicker" style={{marginBottom:7}}>REMINDERS</div><div style={{fontSize:26,fontWeight:950,letterSpacing:-.5,marginBottom:5}}>Daily plan</div><div style={{fontSize:13,color:P.muted,lineHeight:1.65}}>Web reminders are limited. This creates the plan now. The Android version can turn these into real notifications.</div></div>
-      <div className="product-card" style={{padding:15,marginBottom:12}}>
+      <div style={{marginBottom:18}}>
+        <div className="section-kicker" style={{marginBottom:7,color:P.gold}}>IMPORTANT</div>
+        <div style={{fontSize:28,fontWeight:950,letterSpacing:-.7,marginBottom:5}}>Phone reminders</div>
+        <div style={{fontSize:13,color:P.muted,lineHeight:1.65}}>These are the 3 reminders that matter: start the day clean, block the danger window, and review before sleep.</div>
+      </div>
+
+      <div className="product-card" style={{padding:15,marginBottom:12,borderColor:enabled?P.gold+"35":P.border}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:12}}>
+          <div>
+            <div style={{fontSize:15,fontWeight:950,color:P.text}}>Real phone notification setup</div>
+            <div style={{fontSize:11,color:P.muted,marginTop:3}}>Status: {perm==="granted"?"Allowed":perm==="denied"?"Blocked":perm==="unsupported"?"Unsupported":"Not allowed yet"}</div>
+          </div>
+          <button className="tap" onClick={function(){setEnabled(!enabled);}} style={{background:enabled?P.green+"14":P.surface,border:"1px solid "+(enabled?P.green+"45":P.border),color:enabled?P.green:P.muted,borderRadius:13,padding:"9px 12px",fontFamily:F.mono,fontSize:9,fontWeight:950,cursor:"pointer"}}>{enabled?"ON":"OFF"}</button>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+          <button className="tap calm-button" onClick={askPermission} style={{background:P.blue+"12",border:"1px solid "+P.blue+"35",color:P.blue}}>Allow permission</button>
+          <button className="tap calm-button" onClick={test} style={{background:P.green+"12",border:"1px solid "+P.green+"35",color:P.green}}>Send test</button>
+        </div>
+        <div style={{fontSize:11,color:P.muted,lineHeight:1.55,marginTop:11}}>Honest limit: browser notifications are best when the app is installed and recently opened. Full background scheduled alerts need the later Android wrapper.</div>
+      </div>
+
+      <div className="product-card" style={{padding:15,marginBottom:14}}>
         <label className="section-kicker">Morning pledge</label><input className="clean-input" value={morning} onChange={function(e){setMorning(e.target.value);}} style={{marginTop:8,marginBottom:12}}/>
         <label className="section-kicker">Danger-time warning</label><input className="clean-input" value={danger} onChange={function(e){setDanger(e.target.value);}} style={{marginTop:8,marginBottom:12}}/>
         <label className="section-kicker">Night review</label><input className="clean-input" value={night} onChange={function(e){setNight(e.target.value);}} style={{marginTop:8}}/>
       </div>
-      <div className="product-card" style={{padding:15,marginBottom:14}}>
-        <button className="tap" onClick={function(){setEnabled(!enabled);}} style={{width:"100%",background:enabled?P.green+"12":P.surface,border:"1px solid "+(enabled?P.green+"35":P.border),borderRadius:12,padding:"12px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",marginBottom:8}}><span style={{fontSize:13,fontWeight:850}}>Show reminder plan in app</span><span style={{fontFamily:F.mono,fontSize:10,color:enabled?P.green:P.muted}}>{enabled?"ON":"OFF"}</span></button>
-        <button className="tap calm-button" onClick={askPermission} style={{width:"100%",background:P.blue+"10",border:"1px solid "+P.blue+"35",color:P.blue}}>Request notification permission</button>
-      </div>
-      <button className="tap" onClick={function(){onSave({morning:morning,danger:danger,night:night,enabled:enabled,permission:(typeof Notification!=="undefined"?Notification.permission:false)});}} style={{width:"100%",background:P.gold,border:"1px solid "+P.gold,color:"#111827",borderRadius:14,padding:"14px",fontSize:14,fontWeight:950,cursor:"pointer"}}>Save reminder plan</button>
-      {status&&<div style={{marginTop:12,fontSize:12,color:P.muted,textAlign:"center"}}>{status}</div>}
+      <button className="tap" onClick={save} style={{width:"100%",background:P.gold,border:"1px solid "+P.gold,color:"#111827",borderRadius:16,padding:"15px",fontSize:14,fontWeight:950,cursor:"pointer"}}>Save notification plan</button>
+      {status&&<div style={{marginTop:12,fontSize:12,color:P.muted,textAlign:"center",lineHeight:1.5}}>{status}</div>}
       <div style={{height:70}}/>
     </div>
   );
@@ -4653,7 +4808,7 @@ function ToolsView({onNav}){
   ];
   return(
     <div className="fadeIn" style={{padding:"16px 14px 24px"}}>
-      <div style={{marginBottom:18,padding:"6px 2px 2px"}}><div className="section-kicker" style={{marginBottom:7}}>TOOLS</div><div style={{fontSize:29,fontWeight:950,letterSpacing:-.9,marginBottom:5}}>More tools</div><div style={{fontSize:13,color:P.muted,lineHeight:1.65}}>Extra systems live here so Home stays clean.</div></div>
+      <div style={{marginBottom:18,padding:"6px 2px 2px"}}><div className="section-kicker" style={{marginBottom:7}}>TOOLS</div><div style={{fontSize:29,fontWeight:950,letterSpacing:-.9,marginBottom:5}}>Tools</div><div style={{fontSize:13,color:P.muted,lineHeight:1.65}}>Extra screens are kept here so Home stays fast and simple.</div></div>
       <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10}}>
         {tools.map(function(t){return <button key={t.id} className="tap product-card" onClick={function(){onNav(t.id);}} style={{padding:14,display:"flex",alignItems:"center",gap:12,textAlign:"left",cursor:"pointer"}}><div style={{width:38,height:38,borderRadius:12,background:t.col+"14",border:"1px solid "+t.col+"35",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:F.mono,fontSize:14,fontWeight:950,color:t.col,flexShrink:0}}>{t.icon}</div><div style={{flex:1}}><div style={{fontSize:15,fontWeight:900,marginBottom:2}}>{t.label}</div><div style={{fontSize:11,color:P.muted}}>{t.sub}</div></div><div style={{fontFamily:F.mono,fontSize:13,color:P.dim}}>›</div></button>;})}
       </div>
@@ -4808,11 +4963,39 @@ function App(){
       var nx=Object.assign({},x,{lastOpen:new Date().toISOString()});
       setXtra(nx);window.storage.set(XK,JSON.stringify(nx)).catch(function(e){});
       if(!s.name)setOb(1);
+      else if(!x.setup||!x.setup.done)setOb(3);
       else if(!t._checkin){setDailyCheckinOpen(true);}
       else if(!t._env)setEnvQ(true);
       setReady(true);
     })();
   },[]);
+
+
+  useEffect(function(){
+    if(!ready||!st.name)return;
+    var r=getReminderData(xtra);
+    if(!r.enabled||getNotificationPermission()!=="granted")return;
+    var tick=function(){
+      if(document&&document.visibilityState==="hidden"){
+        // Still try. Some mobile browsers allow service-worker notifications from installed PWAs.
+      }
+      if(sameMinuteNow(r.morning)&&!wasNotificationSent("morning")){
+        markNotificationSent("morning");
+        sendPhoneNotification("Morning pledge","Open Build System and make today clean.","morning");
+      }
+      if(sameMinuteNow(r.danger)&&!wasNotificationSent("danger")){
+        markNotificationSent("danger");
+        sendPhoneNotification("Danger window","Move your phone away and start your replacement action now.","danger");
+      }
+      if(sameMinuteNow(r.night)&&!wasNotificationSent("night")){
+        markNotificationSent("night");
+        sendPhoneNotification("Night review","Do the 15-second review before sleep.","night");
+      }
+    };
+    tick();
+    var timer=setInterval(tick,30000);
+    return function(){clearInterval(timer);};
+  },[ready,st.name,xtra]);
 
   useEffect(function(){
     if(!ready||!st.name)return;
@@ -5135,7 +5318,8 @@ function App(){
     </div>
   );
   if(ob===1)return <OnboardName val={draftName} setVal={setDN} onNext={async function(){if(!draftName.trim())return;await saveS(Object.assign({},st,{name:draftName.trim()}));setOb(2);}}/>;
-  if(ob===2)return <OnboardPhase phases={PHASES} onPick={async function(i){await saveS(Object.assign({},st,{phase:i}));setOb(0);}}/>;
+  if(ob===2)return <OnboardPhase phases={PHASES} onPick={async function(i){await saveS(Object.assign({},st,{phase:i}));setOb(3);}}/>;
+  if(ob===3)return <OnboardPlan xtra={xtra} mot={mot} onFinish={async function(plan){var nx=Object.assign({},xtra,{setup:Object.assign({},plan,{done:true,saved:new Date().toISOString()}),settings:Object.assign({},getSettingsData(xtra),{habitName:plan.habit,dangerTime:plan.dangerTime,reminderTime:plan.reminderTime,strictMode:plan.strictMode}),reminders:Object.assign({},getReminderData(xtra),{danger:plan.reminderTime,enabled:!!plan.notifications,permission:getNotificationPermission(),updated:new Date().toISOString()})});await saveX(nx);if(plan.why)await saveMot(Object.assign({},mot,{why:plan.why}));if(plan.habit){await saveHb(Object.assign({},hb,{habits:[{id:"main",label:plan.habit,icon:"🎯",active:true}],activeId:"main"}));}if(plan.notifications&&getNotificationPermission()==="granted")sendPhoneNotification("Build System","Setup complete. Danger-time reminders are active.","setup-complete");setOb(0);}}/>;
 
   return(
     <div className="app-frame" style={{background:P.bg,height:"100dvh",maxHeight:"100dvh",maxWidth:430,width:"100%",margin:"0 auto",color:P.text,fontFamily:F.display,position:"relative",display:"flex",flexDirection:"column",overflow:"hidden"}}>
