@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
 <title>Build System</title>
-<meta name="theme-color" content="#05080D"/>
+<meta name="theme-color" content="#060A10"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -74,7 +74,7 @@ window.storage={
 
 const SK="bsys7_s",TK="bsys7_t",HK="bsys7_h",CK="bsys7_c",MK="bsys7_m",AK="bsys7_a",NK="bsys7_n",XK="bsys7_x",JK="bsys7_j",PK="bsys7_p",ACCK="bsys7_acc",HBK="bsys7_hb",GK="bsys7_g";
 const F={display:"'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",mono:"'JetBrains Mono','SFMono-Regular','Courier New',monospace"};
-const P={bg:"#05080D",surface:"#0B111A",card:"#101722",cardHi:"#182233",border:"#233047",borderHi:"#40516B",gold:"#FFC857",purple:"#A78BFA",green:"#5BE7AE",blue:"#8CC8FF",red:"#FF6577",text:"#F8FAFC",muted:"#9AA8BA",dim:"#1A2433"};
+const P={bg:"#060A10",surface:"#0D131D",card:"#111A26",cardHi:"#182433",border:"#27364B",borderHi:"#46627D",gold:"#FFD166",purple:"#B199FF",green:"#66E8BD",blue:"#9AD3FF",red:"#FF798A",text:"#F7FAFE",muted:"#A5B2C3",dim:"#1F2B3B"};
 const SHADOW={
   card:"0 1px 2px rgba(0,0,0,0.4), 0 8px 24px -8px rgba(0,0,0,0.5)",
   raised:"0 2px 4px rgba(0,0,0,0.4), 0 16px 40px -12px rgba(0,0,0,0.6)",
@@ -814,9 +814,10 @@ const CSS=`
   /* Premium visual upgrade v16 */
   .app-frame{
     background:
-      radial-gradient(circle at 18% -6%, rgba(124,183,255,.12), transparent 34%),
-      radial-gradient(circle at 92% 2%, rgba(246,199,104,.08), transparent 28%),
-      linear-gradient(180deg,#0B1018 0%,#070A0F 58%,#05070B 100%) !important;
+      radial-gradient(circle at 15% -8%, rgba(107,196,255,.16), transparent 34%),
+      radial-gradient(circle at 88% 4%, rgba(255,209,102,.09), transparent 30%),
+      radial-gradient(circle at 50% 120%, rgba(102,232,189,.06), transparent 40%),
+      linear-gradient(180deg,#0C131D 0%,#080D14 58%,#05070B 100%) !important;
     letter-spacing:-.01em;
   }
   .app-scroll-area{
@@ -1778,7 +1779,7 @@ function XPBar({st}){
 function HomeHero({st,cd,cDays,cTitle,hist,todayW,allCore,cDone,onStartClean}){
   var days7=last7();
   return(
-    <div style={{margin:"16px 14px 12px",padding:"22px 18px 18px",background:"linear-gradient(150deg,rgba(22,33,49,.96),rgba(8,13,21,.99))",border:"1px solid rgba(155,174,198,.20)",borderRadius:30,boxShadow:"0 24px 70px -42px rgba(0,0,0,.96), inset 0 1px 0 rgba(255,255,255,.07)",position:"relative",overflow:"hidden"}}>
+    <div style={{margin:"16px 14px 12px",padding:"22px 18px 18px",background:"linear-gradient(152deg,rgba(24,36,54,.98),rgba(9,14,22,.99))",border:"1px solid rgba(164,182,204,.18)",borderRadius:30,boxShadow:"0 24px 70px -42px rgba(0,0,0,.96), inset 0 1px 0 rgba(255,255,255,.08), 0 0 0 1px rgba(255,255,255,.02)",position:"relative",overflow:"hidden"}}>
       <div style={{position:"absolute",inset:0,background:"radial-gradient(circle at 12% 0%,"+cTitle.col+"18,transparent 36%)",pointerEvents:"none"}}/>
       <div style={{display:"flex",alignItems:"center",gap:18,marginBottom:18,position:"relative"}}>
         <div style={{position:"relative",flexShrink:0,filter:"drop-shadow(0 0 16px "+cTitle.col+"35)"}}>
@@ -3316,7 +3317,7 @@ function CommandCenterV18({st,cd,cDays,xtra,nd,onNav,openUrge,onOpenIdentity,onO
         <div>
           <div className="section-kicker" style={{color:P.blue,marginBottom:6}}>COMMAND CENTER</div>
           <div style={{fontSize:25,fontWeight:950,letterSpacing:-.8,lineHeight:1.05}}>Today&apos;s system</div>
-          <div style={{fontSize:12,color:P.muted,marginTop:5,lineHeight:1.45}}>One screen. One plan. No overthinking.</div>
+          <div style={{fontSize:12,color:P.muted,marginTop:5,lineHeight:1.45}}>Clear next steps. Less noise. More control.</div>
         </div>
         <div style={{position:"relative",width:96,height:96,flexShrink:0}}>
           <svg width="96" height="96" className="v18-focus-ring" style={{transform:"rotate(-90deg)"}}>
@@ -4514,7 +4515,7 @@ function PrivacyView({xtra,onToast}){
   var makeBackup=function(){
     var data={};
     try{Object.keys(localStorage).filter(function(k){return k.indexOf("bsys7_")===0;}).forEach(function(k){data[k]=localStorage.getItem(k);});}catch(e){}
-    var txt=JSON.stringify({app:"Build System",version:"v15",created:new Date().toISOString(),data:data},null,2);
+    var txt=JSON.stringify({app:"Build System",version:"v19",created:new Date().toISOString(),data:data},null,2);
     setBackup(txt);setStatus("Backup created.");
   };
   var copyBackup=function(){
@@ -4643,16 +4644,16 @@ function FeedbackView({xtra,onSave}){
 
 function ToolsView({onNav}){
   var tools=[
-    {id:"route",label:"Route",sub:"Daily recovery path",icon:"R",col:P.blue},
-    {id:"bosses",label:"Bosses",sub:"Real-world challenges",icon:"B",col:P.gold},
-    {id:"settings",label:"Settings",sub:"Habit, risk, strict mode",icon:"S",col:P.green},
-    {id:"reminders",label:"Reminders",sub:"Morning, danger, review",icon:"N",col:P.purple},
-    {id:"privacy",label:"Privacy",sub:"Export, restore, delete",icon:"P",col:P.muted},
-    {id:"feedback",label:"Feedback",sub:"Bug report template",icon:"F",col:P.red},
+    {id:"route",label:"Route",sub:"Daily recovery path",icon:"↗",col:P.blue},
+    {id:"bosses",label:"Challenges",sub:"Real-world challenges",icon:"◆",col:P.gold},
+    {id:"settings",label:"Settings",sub:"Habit, risk, strict mode",icon:"⚙",col:P.green},
+    {id:"reminders",label:"Reminders",sub:"Morning, danger, review",icon:"◔",col:P.purple},
+    {id:"privacy",label:"Privacy",sub:"Export, restore, delete",icon:"🔒",col:P.muted},
+    {id:"feedback",label:"Feedback",sub:"Bug report template",icon:"✉",col:P.red},
   ];
   return(
     <div className="fadeIn" style={{padding:"16px 14px 24px"}}>
-      <div style={{marginBottom:18,padding:"6px 2px 2px"}}><div className="section-kicker" style={{marginBottom:7}}>TOOLS</div><div style={{fontSize:28,fontWeight:950,letterSpacing:-.8,marginBottom:5}}>More tools</div><div style={{fontSize:13,color:P.muted,lineHeight:1.65}}>Extra systems live here so Home stays clean.</div></div>
+      <div style={{marginBottom:18,padding:"6px 2px 2px"}}><div className="section-kicker" style={{marginBottom:7}}>TOOLS</div><div style={{fontSize:29,fontWeight:950,letterSpacing:-.9,marginBottom:5}}>More tools</div><div style={{fontSize:13,color:P.muted,lineHeight:1.65}}>Extra systems live here so Home stays clean.</div></div>
       <div style={{display:"grid",gridTemplateColumns:"1fr",gap:10}}>
         {tools.map(function(t){return <button key={t.id} className="tap product-card" onClick={function(){onNav(t.id);}} style={{padding:14,display:"flex",alignItems:"center",gap:12,textAlign:"left",cursor:"pointer"}}><div style={{width:38,height:38,borderRadius:12,background:t.col+"14",border:"1px solid "+t.col+"35",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:F.mono,fontSize:14,fontWeight:950,color:t.col,flexShrink:0}}>{t.icon}</div><div style={{flex:1}}><div style={{fontSize:15,fontWeight:900,marginBottom:2}}>{t.label}</div><div style={{fontSize:11,color:P.muted}}>{t.sub}</div></div><div style={{fontFamily:F.mono,fontSize:13,color:P.dim}}>›</div></button>;})}
       </div>
@@ -4663,14 +4664,14 @@ function ToolsView({onNav}){
 
 function Nav({view,setView}){
   var items=[
-    {id:"home",icon:"H",label:"Home"},
-    {id:"setup",icon:"P",label:"Plan"},
-    {id:"control",icon:"C",label:"Clean"},
-    {id:"progress",icon:"S",label:"Stats"},
-    {id:"tools",icon:"T",label:"Tools"},
+    {id:"home",icon:"⌂",label:"Home"},
+    {id:"setup",icon:"◎",label:"Plan"},
+    {id:"control",icon:"◌",label:"Recover"},
+    {id:"progress",icon:"▣",label:"Stats"},
+    {id:"tools",icon:"✦",label:"Tools"},
   ];
   return(
-    <div className="bottom-nav" style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:"rgba(7,10,15,.86)",backdropFilter:"blur(24px) saturate(1.35)",borderTop:"1px solid rgba(255,255,255,.08)",display:"flex",zIndex:400,padding:"9px 10px calc(9px + env(safe-area-inset-bottom,0px))",gap:7}}>
+    <div className="bottom-nav" style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:430,background:"rgba(8,12,18,.84)",backdropFilter:"blur(26px) saturate(1.5)",borderTop:"1px solid rgba(255,255,255,.07)",boxShadow:"0 -18px 44px -34px rgba(0,0,0,.88)",display:"flex",zIndex:400,padding:"9px 10px calc(9px + env(safe-area-inset-bottom,0px))",gap:7}}>
       {items.map(function(n){
         var active=view===n.id;
         return(
@@ -4690,11 +4691,11 @@ function OnboardName({val,setVal,onNext}){
       <style>{CSS}</style>
       <div style={{width:"100%",textAlign:"center"}}>
         <div style={{fontFamily:F.mono,fontSize:9,color:P.muted,letterSpacing:4,marginBottom:32}}>BUILD SYSTEM</div>
-        <div style={{fontSize:28,fontWeight:700,marginBottom:6}}>What&#39;s your name,</div>
-        <div style={{fontSize:28,fontWeight:700,color:P.gold,marginBottom:40}}>warrior?</div>
+        <div style={{fontSize:28,fontWeight:700,marginBottom:6}}>What&#39;s your name?</div>
+        <div style={{fontSize:12,fontWeight:700,color:P.muted,marginBottom:24,letterSpacing:2.4,textTransform:"uppercase"}}>Private setup</div>
         <input type="text" value={val} onChange={function(e){setVal(e.target.value);}} onKeyDown={function(e){if(e.key==="Enter")onNext();}} placeholder="Your name..." autoFocus
-          style={{width:"100%",background:P.card,border:"1px solid "+P.border,color:P.text,borderRadius:8,padding:"14px 16px",fontSize:17,fontWeight:600,marginBottom:14}}/>
-        <button className="tap" onClick={onNext} style={{width:"100%",padding:"14px 0",background:val.trim()?P.gold:P.dim,color:val.trim()?"#000":P.muted,border:"none",borderRadius:8,fontSize:15,fontWeight:700,cursor:"pointer"}}>Begin &rarr;</button>
+          style={{width:"100%",background:P.card,border:"1px solid "+P.border,color:P.text,borderRadius:14,padding:"15px 16px",fontSize:17,fontWeight:600,marginBottom:14,boxShadow:"inset 0 1px 0 rgba(255,255,255,.03)"}}/>
+        <button className="tap" onClick={onNext} style={{width:"100%",padding:"14px 0",background:val.trim()?P.gold:P.dim,color:val.trim()?"#000":P.muted,border:"none",borderRadius:8,fontSize:15,fontWeight:700,cursor:"pointer"}}>Continue →</button>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-const CACHE_NAME = "build-system-v18";
-const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
+const CACHE_NAME = "build-system-v19";
+const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./sw.js", "./icons/icon-192.png", "./icons/icon-512.png"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });

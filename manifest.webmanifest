@@ -1,13 +1,19 @@
 {
+  "id": "./",
   "name": "Build System",
   "short_name": "Build",
-  "description": "A private, polished habit recovery and self-control system.",
-  "start_url": "./index.html",
+  "description": "A private recovery app focused on discipline, better habits, and staying in control.",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#05080D",
-  "theme_color": "#05080D",
+  "background_color": "#060A10",
+  "theme_color": "#060A10",
+  "categories": [
+    "health",
+    "lifestyle",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "icons/icon-192.png",
